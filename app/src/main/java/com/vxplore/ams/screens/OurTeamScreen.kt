@@ -276,6 +276,7 @@ fun OurTeamScreen(
                             verticalArrangement = Arrangement.Center
                         ) {
                             Image(
+
                                 painter = painterResource(id = R.drawable.bell2),
                                 contentDescription = stringResource(id = R.string.notification),
                                 modifier = Modifier
