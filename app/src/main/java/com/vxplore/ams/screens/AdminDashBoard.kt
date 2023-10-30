@@ -48,7 +48,9 @@ fun AdminDashBoard(){
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier=Modifier.fillMaxSize()
+        modifier=Modifier
+            .fillMaxSize()
+            .background(Color.White)
     ) {
         LazyVerticalGrid(
             modifier = Modifier.fillMaxSize(),
@@ -84,9 +86,13 @@ fun AdminDashBoard(){
                                 .padding(bottom = 8.dp),
                             contentAlignment = Alignment.BottomCenter
                         ) {
-                            Text(text = "Name", modifier = Modifier
+                            Text(
+                                text = "Name", modifier = Modifier
                                 .background(Color.White)
-                                .padding(4.dp))
+                                .padding(4.dp),
+                                color = Color.Black
+                            )
+
                         }
                     }
 
@@ -96,9 +102,14 @@ fun AdminDashBoard(){
                             .padding(3.dp),
                         contentAlignment = Alignment.TopEnd
                     ) {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(imageVector = Icons.Default.CheckCircle, contentDescription ="",
-                                modifier=Modifier.background(Color.White, CircleShape))
+                        IconButton(
+                            onClick = { }) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = "",
+                                modifier = Modifier.background(Color.White, CircleShape),
+                                tint = Color.Black
+                            )
                         }
                     }
 

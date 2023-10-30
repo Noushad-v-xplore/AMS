@@ -1,6 +1,9 @@
 package com.vxplore.ams.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,19 +26,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.debduttapanda.j3lib.NotificationService
+import com.vxplore.ams.MyDataIds
+import com.vxplore.ams.R
 
-data class  List(
+data class  List<T>(
     val CheckInTime:String,
     val CheckOutTime:String,
 
 )
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EmployeeDashBoard(){
+fun EmployeeDashBoard(notifier : NotificationService = com.debduttapanda.j3lib.notifier()){
     val checkedIn = remember{ mutableStateOf(false) }
-    val list = mutableListOf<List>()
+    val list = mutableListOf<List<Any?>>()
     list.add(List("5.2","2.3"))
     list.add(List("5.3","2.4"))
     list.add(List("5.2","2.5"))
@@ -59,6 +66,7 @@ fun EmployeeDashBoard(){
     Box (
         modifier= Modifier
             .fillMaxSize()
+            .background(Color.White)
     ){
         Column {
 
@@ -76,7 +84,7 @@ fun EmployeeDashBoard(){
                     Button(
                         onClick =
                         {
-
+                        checkedIn.value=!checkedIn.value
                         },
                         colors = if (checkedIn.value == false) {//false
                             ButtonDefaults.buttonColors(Color.Green)
@@ -97,6 +105,15 @@ fun EmployeeDashBoard(){
                             }
                         )
                     }
+                    Image(
+                        painter = painterResource(id = R.drawable.nxt_arrow) ,
+                        contentDescription ="",
+                        modifier = Modifier
+                            .clickable {
+                                notifier.notify(MyDataIds.btnNxt)
+                            }
+
+                    )
                 }
             }
 
@@ -117,6 +134,7 @@ fun EmployeeDashBoard(){
                         items(list){
                             Card(
                                 elevation = CardDefaults.cardElevation(8.dp),
+                                colors = CardDefaults.cardColors(Color.White),
                                 onClick = {
 
                                 },
@@ -133,11 +151,20 @@ fun EmployeeDashBoard(){
                                         .fillMaxWidth()
                                         .padding(horizontal = 16.dp)
                                 ) {
-                                    Text(text = "Today")
+                                    Text(
+                                        text = "Today",
+                                        color = Color.Black
+                                    )
 
                                     Row {
-                                        Text(text = "Working Hour: ")
-                                        Text(text = it.CheckOutTime+" hr")
+                                        Text(
+                                            text = "Working Hour: ",
+                                            color = Color.Black
+                                        )
+                                        Text(
+                                            text = it.CheckOutTime+" hr",
+                                            color = Color.Black
+                                        )
                                     }
                                 }
                             }
