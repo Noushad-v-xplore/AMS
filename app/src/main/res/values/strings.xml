@@ -43,4 +43,16 @@
     <string name="delete">Delete</string>
     <string name="mobile_app_team">Mobile App Team</string>
     <string name="our_team">Our Team</string>
+    <string name="favorite">Favorite</string>
+    <string name="share">Share</string>
+    <string name="assigned_to">Assigned to</string>
+    <string name="my_tasks">My Tasks</string>
+    <string name="dropdown">Dropdown</string>
+    <string name="task_due">Due Date</string>
+    <string name="assign_date">Assign Date</string>
+    <string name="description">Description</string>
+    <string name="subtasks">Subtasks</string>
+    <string name="btn_subtask">Subtask</string>
+    <string name="attachments">Attachments</string>
+    <string name="add_attachment">Add attachment</string>
 </resources>

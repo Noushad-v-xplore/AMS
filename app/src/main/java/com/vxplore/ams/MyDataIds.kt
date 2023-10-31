@@ -20,5 +20,11 @@ enum class MyDataIds{
     taskList,
     cmntList,
     teamName,
-    teamList
+    teamList,
+    items,
+    description,
+    taskitems,
+    subtasklist,
+    addsubtask,
+    projectitems
 }

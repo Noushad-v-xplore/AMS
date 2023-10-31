@@ -15,6 +15,7 @@ import com.vxplore.ams.screens.SplashScreen
 import com.vxplore.ams.screens.TaskScreen
 import com.vxplore.ams.screens.TodoScreen
 import com.vxplore.ams.viewmodels.AdminDashboardViewModel
+import com.vxplore.ams.viewmodels.AssignTaskViewModel
 import com.vxplore.ams.viewmodels.EmployeeDashboardViewModel
 import com.vxplore.ams.viewmodels.LoginViewModel
 import com.vxplore.ams.viewmodels.MobileTeamViewModel
@@ -28,7 +29,7 @@ fun MyApp() {
     val navController = rememberNavController()
     NavHost(
         navController,
-        startDestination = Routes.ourteam.full
+        startDestination = Routes.assigntask.full
     ) {
         MyScreen(
             navController = navController,
@@ -102,7 +103,7 @@ fun MyApp() {
         MyScreen(
             navController = navController,
             route = Routes.assigntask.full,
-            { viewModel<LoginViewModel>() }
+            { viewModel<AssignTaskViewModel>() }
         ) {
             AssignTaskScreen()
 
