@@ -40,11 +40,9 @@ class TodoViewModel(
             }
             MyDataIds.floatingDialogue -> {
                 openDialog.value=!openDialog.value
-                //floatingDialogue()
             }
             MyDataIds.btnUploadclick -> {
                 openDialog.value=!openDialog.value
-                //floatingDialogue()
             }
         }
     }

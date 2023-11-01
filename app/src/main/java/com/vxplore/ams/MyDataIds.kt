@@ -26,5 +26,10 @@ enum class MyDataIds{
     taskitems,
     subtasklist,
     addsubtask,
-    projectitems
+    projectitems,
+    assigntasklist,
+    commentlist,
+    cmntbtn,
+    questionfield,
+    imglist
 }

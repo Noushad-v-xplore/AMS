@@ -1,5 +1,6 @@
 package com.vxplore.ams.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
@@ -14,9 +15,10 @@ import com.debduttapanda.j3lib.SoftInputMode
 import com.debduttapanda.j3lib.StatusBarColor
 import com.debduttapanda.j3lib.WirelessViewModelInterface
 import com.vxplore.ams.MyDataIds
-import com.vxplore.ams.models.CompletedList
+import com.vxplore.ams.models.Assigntasklist
+import com.vxplore.ams.models.Comment
+import com.vxplore.ams.models.Commentlist
 import com.vxplore.ams.models.Subtasklist
-import com.vxplore.ams.models.WorkList
 import kotlinx.coroutines.launch
 
 class AssignTaskViewModel(
@@ -31,13 +33,25 @@ class AssignTaskViewModel(
     override val softInputMode = mutableStateOf(SoftInputMode.adjustPan)
     override val resolver = Resolver()
     private val description = mutableStateOf("")
+    private val questionfield = mutableStateOf("")
     override val notifier = NotificationService { id, arg ->
         when (id) {
             MyDataIds.description -> {
                 description.value = arg as String
             }
+            MyDataIds.questionfield -> {
+                questionfield.value = arg as String
+            }
             MyDataIds.addsubtask -> {
                 subtasklist.add(Subtasklist("hello this is status"))
+            }
+            MyDataIds.cmntbtn -> {
+                item.value = arg as String
+                val split= item.value.split("+")
+                Log.d("bcvjh","$split")
+                cmnt.value = split[0]
+                emoji.value = split[1]
+                assigntasklist.add(Assigntasklist("","", Comment(cmnt.value,emoji.value)))
             }
 
         }
@@ -45,6 +59,12 @@ class AssignTaskViewModel(
     private val taskitems = mutableStateListOf<String>()
     private val projectitems = mutableStateListOf<String>()
     private val subtasklist = mutableStateListOf<Subtasklist>()
+    private val assigntasklist = mutableStateListOf<Assigntasklist>()
+    private val commentlist = mutableStateListOf<Commentlist>()
+    private val item = mutableStateOf("")
+    private val cmnt = mutableStateOf("")
+    private val emoji = mutableStateOf("")
+    private val imglist = mutableStateListOf<String>()
 
 
     init {
@@ -53,7 +73,11 @@ class AssignTaskViewModel(
             MyDataIds.description to description,
             MyDataIds.taskitems to taskitems,
             MyDataIds.projectitems to projectitems,
-            MyDataIds.subtasklist to subtasklist
+            MyDataIds.subtasklist to subtasklist,
+            MyDataIds.assigntasklist to assigntasklist,
+            MyDataIds.commentlist to commentlist,
+            MyDataIds.questionfield to questionfield,
+            MyDataIds.imglist to imglist,
 
 
             )
@@ -69,6 +93,25 @@ class AssignTaskViewModel(
             projectitems.add("Bikrimart Project")
 
             subtasklist.add(Subtasklist("hello this is status" ))
+
+            assigntasklist.add(Assigntasklist("Debdutta Panda added to Bikrimart Project","19 Jul 2021", Comment(cmnt.value,emoji.value)))
+            assigntasklist.add(Assigntasklist("Debdutta Panda added to Bikrimart Project","19 Jul 2021",Comment(cmnt.value,emoji.value)))
+            assigntasklist.add(Assigntasklist("Debdutta Panda changed the due date to 20 Jul 2021","19 Jul 2021",Comment(cmnt.value,emoji.value)))
+
+            commentlist.add(Commentlist("Thanks, on it!","https://t4.ftcdn.net/jpg/04/89/39/47/360_F_489394725_Oox6jg48u2K0FSk4RlPCzqkU7Qvu2BSu.jpg"))
+            commentlist.add(Commentlist("I have a question...",""))
+            commentlist.add(Commentlist("Mind if I changed it...",""))
+            commentlist.add(Commentlist("No problem...",""))
+            commentlist.add(Commentlist("Done...",""))
+
+            imglist.add("https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg")
+            imglist.add("https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg")
+            imglist.add("https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg")
+            imglist.add("https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg")
+            imglist.add("https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg")
+            imglist.add("https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg")
+            imglist.add("https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg")
+
 
         }
 
