@@ -1,8 +1,13 @@
 package com.vxplore.ams.screens
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.provider.OpenableColumns
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -44,6 +49,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -56,6 +62,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -74,15 +81,20 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.debduttapanda.j3lib.NotificationService
 import com.debduttapanda.j3lib.dep
 import com.debduttapanda.j3lib.depx
@@ -95,6 +107,7 @@ import com.vxplore.ams.MyDataIds
 import com.vxplore.ams.R
 import com.vxplore.ams.models.Assigntasklist
 import com.vxplore.ams.models.Commentlist
+import com.vxplore.ams.models.SelectedFile
 import com.vxplore.ams.models.Subtasklist
 import com.vxplore.ams.ui.theme.Box_Blue
 import com.vxplore.ams.ui.theme.Date_red
@@ -550,66 +563,67 @@ fun AssignTaskScreen(
                     width = 2f,
                     pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
                 )
-                val context = LocalContext.current
-                var selectedPdfFileResourceId by remember { mutableStateOf<Int?>(null) }
+                /* val context = LocalContext.current
+                 var selectedPdfFileResourceId by remember { mutableStateOf<Int?>(null) }*/
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                        // contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .padding(start = 16.dep, top = 8.dep)
-                            .height(56.dep)
-                            .width(56.dep)
-                            .clip(RoundedCornerShape(4.dep))
-                            .clickable(onClick = {
-                                val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                                    type = "application/pdf"
-                                }
-                                val filePickerIntent =
-                                    Intent.createChooser(intent, "Select a PDF file")
-                                context.startActivity(filePickerIntent)
-                            })
-                            .drawBehind {
-                                drawRoundRect(
-                                    color = Color.DarkGray,
-                                    style = stroke,
-                                    cornerRadius = CornerRadius(4.depx, 4.depx)
-                                )
-                            }
+                    FilePickerScreen()
+                    /* Column(
+                         horizontalAlignment = Alignment.CenterHorizontally,
+                         verticalArrangement = Arrangement.Center,
+                         // contentAlignment = Alignment.Center,
+                         modifier = Modifier
+                             .padding(start = 16.dep, top = 8.dep)
+                             .height(56.dep)
+                             .width(56.dep)
+                             .clip(RoundedCornerShape(4.dep))
+                             .clickable(onClick = {
+                                 val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                                     type = "application/pdf"
+                                 }
+                                 val filePickerIntent =
+                                     Intent.createChooser(intent, "Select a PDF file")
+                                 context.startActivity(filePickerIntent)
+                             })
+                             .drawBehind {
+                                 drawRoundRect(
+                                     color = Color.DarkGray,
+                                     style = stroke,
+                                     cornerRadius = CornerRadius(4.depx, 4.depx)
+                                 )
+                             }
 
-                    ) {
-                        AsyncImage(
-                            model = R.drawable.add,
-                            contentDescription = stringResource(id = R.string.add_attachment),
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .height(24.dep)
-                                .width(24.dep)
-                        )
-                    }
-                    if (selectedPdfFileResourceId != null) {
-                        AsyncImage(
-                            model = selectedPdfFileResourceId!!,
-                            contentDescription = stringResource(id = R.string.add_attachment),
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                //.background(Color.Blue)
-                                .height(24.dep)
-                                .width(24.dep)
-                        )
+                     ) {
+                         AsyncImage(
+                             model = R.drawable.add,
+                             contentDescription = stringResource(id = R.string.add_attachment),
+                             contentScale = ContentScale.Crop,
+                             modifier = Modifier
+                                 .height(24.dep)
+                                 .width(24.dep)
+                         )
+                     }
+                     if (selectedPdfFileResourceId != null) {
+                         AsyncImage(
+                             model = selectedPdfFileResourceId!!,
+                             contentDescription = stringResource(id = R.string.add_attachment),
+                             contentScale = ContentScale.Crop,
+                             modifier = Modifier
+                                 //.background(Color.Blue)
+                                 .height(24.dep)
+                                 .width(24.dep)
+                         )
 
-                        Image(
-                            painter = painterResource(id = R.drawable.cancel),
-                            contentDescription = "PDF Icon",
-                            modifier = Modifier
-                                .padding(start = 12.dep)
-                                .size(16.dep)
-                        )
-                    }
+                         Image(
+                             painter = painterResource(id = R.drawable.cancel),
+                             contentDescription = "PDF Icon",
+                             modifier = Modifier
+                                 .padding(start = 12.dep)
+                                 .size(16.dep)
+                         )
+                     }*/
                 }
                 Spacer(
                     modifier = Modifier
@@ -642,124 +656,124 @@ fun AssignTaskScreen(
                 ) {
                     Column {
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(start = 16.dep, top = 12.dep)
-                    ) {
-                        Box(
-                            contentAlignment = Alignment.Center,
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
-                                .height(28.dep)
-                                .width(28.dep)
-                                //.border(1.dep, Color(0xFFEFEFEF), CircleShape)
-                                .clip(CircleShape)
-                                .background(Color(0xFFFF817E))
-
+                                .padding(start = 16.dep, top = 12.dep)
                         ) {
-                            AsyncImage(
-                                model = R.drawable.person, contentDescription = "",
-                                contentScale = ContentScale.Crop,
+                            Box(
+                                contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .height(16.dep)
-                                    .width(16.dep)
-                            )
+                                    .height(28.dep)
+                                    .width(28.dep)
+                                    //.border(1.dep, Color(0xFFEFEFEF), CircleShape)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFFF817E))
 
-                        }
-                        Column {
-
-
-                            Text(
-                                text = "Debdutta Panda created this task",
-                                fontSize = 12.sep,
-                                color = Color.Black,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(start = 8.dep)
-                            )
-                            Text(
-                                text = "19 Jul 2021",
-                                fontSize = 10.sep,
-                                color = Extra_light_Gray,
-                                //fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(start = 8.dep)
-                            )
-                        }
-                    }
-                    Spacer(
-                        modifier = Modifier
-                            .height(4.dep)
-                    )
-
-
-                    LazyColumn(
-                        verticalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            //.padding(bottom = 12.dep)
-                            //.height(60.dep)
-                            .fillMaxWidth()
-                            //.wrapContentHeight()
-                            .heightIn(min = 60.dep, max = 1000.dep)
-                        //.weight(1f)
-                        //.clip(RoundedCornerShape(4.dep))
-                        //.background(Color(0xFFF5F5F5))
-                    ) {
-                        items(assigntasklist) {
-
-
-                            FlowRow(
-                                //verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dep)
-                                    .padding(top = 4.dep),
-                                horizontalArrangement = Arrangement.spacedBy(8.dep)
                             ) {
-                                Text(
-                                    text = it.Task,
-                                    fontSize = 10.sep,
-                                    color = Extra_light_Gray,
-                                    maxLines = 5,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier
-                                    //.padding(start = 8.dep)
-                                )
-                                Text(
-                                    text = it.Date,
-                                    fontSize = 10.sep,
-                                    maxLines = 5,
-                                    color = Extra_light_Gray,
-                                    //fontWeight = FontWeight.Bold,
-                                )
-                            }
-                            Row (
-                                //verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .padding(start = 16.dep)
-                                    .fillMaxWidth()
-                            ){
-                                Text(
-                                    text = it.Comments.Comment,
-                                    fontSize = 10.sep,
-                                    maxLines = 5,
-                                    color = Extra_light_Gray,
-                                    //fontWeight = FontWeight.Bold,
-                                )
                                 AsyncImage(
-                                    model = it.Comments.Emoji,
-                                    contentDescription = stringResource(id = R.string.add_attachment),
+                                    model = R.drawable.person, contentDescription = "",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
-                                        //.padding(start = 4.dep)
-                                        //.background(Color.Blue)
                                         .height(16.dep)
                                         .width(16.dep)
                                 )
+
+                            }
+                            Column {
+
+
+                                Text(
+                                    text = "Debdutta Panda created this task",
+                                    fontSize = 12.sep,
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        .padding(start = 8.dep)
+                                )
+                                Text(
+                                    text = "19 Jul 2021",
+                                    fontSize = 10.sep,
+                                    color = Extra_light_Gray,
+                                    //fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        .padding(start = 8.dep)
+                                )
+                            }
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .height(4.dep)
+                        )
+
+
+                        LazyColumn(
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                //.padding(bottom = 12.dep)
+                                //.height(60.dep)
+                                .fillMaxWidth()
+                                //.wrapContentHeight()
+                                .heightIn(min = 60.dep, max = 1000.dep)
+                            //.weight(1f)
+                            //.clip(RoundedCornerShape(4.dep))
+                            //.background(Color(0xFFF5F5F5))
+                        ) {
+                            items(assigntasklist) {
+
+
+                                FlowRow(
+                                    //verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .padding(horizontal = 16.dep)
+                                        .padding(top = 4.dep),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dep)
+                                ) {
+                                    Text(
+                                        text = it.Task,
+                                        fontSize = 10.sep,
+                                        color = Extra_light_Gray,
+                                        maxLines = 5,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier
+                                        //.padding(start = 8.dep)
+                                    )
+                                    Text(
+                                        text = it.Date,
+                                        fontSize = 10.sep,
+                                        maxLines = 5,
+                                        color = Extra_light_Gray,
+                                        //fontWeight = FontWeight.Bold,
+                                    )
+                                }
+                                Row(
+                                    //verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .padding(start = 16.dep)
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = it.Comments.Comment,
+                                        fontSize = 10.sep,
+                                        maxLines = 5,
+                                        color = Extra_light_Gray,
+                                        //fontWeight = FontWeight.Bold,
+                                    )
+                                    AsyncImage(
+                                        model = it.Comments.Emoji,
+                                        contentDescription = stringResource(id = R.string.add_attachment),
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            //.padding(start = 4.dep)
+                                            //.background(Color.Blue)
+                                            .height(16.dep)
+                                            .width(16.dep)
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
                 /*   }
                }*/
 
@@ -773,25 +787,25 @@ fun AssignTaskScreen(
                         .padding(start = 16.dep, end = 16.dep)
                         .background(Color(0xFFFBFBFB))
                         .fillMaxWidth()
-                ){
-                    items(commentlist){
-                      /*  Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                //.padding(start = 16.dep)
-                                .height(40.dep)
-                                //.width(100.dep)
-                                .wrapContentWidth()
-                                //.fillMaxWidth()
-                                //.heightIn(min = 80.dep, max = 1000.dep)
-                                //.border(1.dep, Color.DarkGray, CircleShape)
-                                .clip(RoundedCornerShape(20.dep))
-                                .background(Color(0xFFF5F5F5))
-                        )*/
-                        val msg ="${it.Comment}+${it.Emoji}"
+                ) {
+                    items(commentlist) {
+                        /*  Box(
+                              contentAlignment = Alignment.Center,
+                              modifier = Modifier
+                                  //.padding(start = 16.dep)
+                                  .height(40.dep)
+                                  //.width(100.dep)
+                                  .wrapContentWidth()
+                                  //.fillMaxWidth()
+                                  //.heightIn(min = 80.dep, max = 1000.dep)
+                                  //.border(1.dep, Color.DarkGray, CircleShape)
+                                  .clip(RoundedCornerShape(20.dep))
+                                  .background(Color(0xFFF5F5F5))
+                          )*/
+                        val msg = "${it.Comment}+${it.Emoji}"
                         Button(
                             onClick = {
-                                notifier.notify(com.vxplore.ams.MyDataIds.cmntbtn,msg)
+                                notifier.notify(com.vxplore.ams.MyDataIds.cmntbtn, msg)
                             },
                             modifier = Modifier
                                 //.padding(start = 16.dep)
@@ -805,7 +819,7 @@ fun AssignTaskScreen(
                                 .clip(RoundedCornerShape(20.dep)),
                             colors = ButtonDefaults.buttonColors(Color(0xFFF5F5F5)),
 
-                        )
+                            )
                         {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -818,7 +832,7 @@ fun AssignTaskScreen(
                                     color = Color.Black,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
-                                       // .padding(horizontal = 8.dep)
+                                    // .padding(horizontal = 8.dep)
                                 )
 
                                 AsyncImage(
@@ -833,10 +847,10 @@ fun AssignTaskScreen(
                                 )
                             }
                         }
-                          Spacer(
-                 modifier = Modifier
-                     .width(8.dep)
-             )
+                        Spacer(
+                            modifier = Modifier
+                                .width(8.dep)
+                        )
                     }
 
                 }
@@ -1117,6 +1131,160 @@ fun RoundedImageStack(
         }
     }
 }
+
+
+val stroke = Stroke(
+    width = 2f,
+    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+)
+
+@Composable
+fun FilePickerScreen(
+
+) {
+    var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
+    val selectedFileName = remember { mutableStateOf<String?>(null) }
+    var isPDFFile by remember { mutableStateOf(false) }
+    var selectedFiles by remember { mutableStateOf<MutableList<SelectedFile>>(mutableListOf()) }
+
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            selectedFileUri = it
+            selectedFileName.value = getFileNameFromUri(context, uri)
+            val fileName = getFileNameFromUri(context, uri)
+            isPDFFile = selectedFileName.value?.endsWith(".pdf", ignoreCase = true) == true
+            val selectedFile = SelectedFile(uri, fileName, isPDFFile)
+            selectedFiles.add(selectedFile)
+        }
+    }
+
+    val openFileIntentLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .padding(start = 16.dep, top = 8.dep)
+            .height(56.dep)
+            .width(56.dep)
+            .clip(MaterialTheme.shapes.small)
+            .clickable {
+                launcher.launch("*/*")
+            }
+            .drawBehind {
+                drawRoundRect(
+                    color = Color.DarkGray,
+                    style = stroke,
+                    cornerRadius = CornerRadius(4.depx, 4.depx)
+                )
+            }
+    ) {
+        AsyncImage(
+            model = R.drawable.add,
+            contentDescription = "File Icon",
+            modifier = Modifier
+                .height(24.dep)
+                .width(24.dep)
+        )
+    }
+
+    selectedFileUri?.let {
+        LazyRow(
+            modifier = Modifier
+                .padding(start = 16.dep)
+                .background(Color(0xFFFBFBFB))
+                .fillMaxWidth()
+        ) {
+            items(selectedFiles) { it ->
+
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(start = 8.dep)
+                        .width(92.dep)
+                        .clickable {
+                            val openFileIntent = Intent(Intent.ACTION_VIEW)
+                            openFileIntent.data = it.uri
+                            openFileIntentLauncher.launch(openFileIntent)
+                        }
+                ) {
+                    Row {
+                        if (it.isPDF) {
+                            Image(
+                                painter = painterResource(id = R.drawable.pdf),
+                                contentDescription = "File Icon",
+                                modifier = Modifier
+                                    .size(68.dp)
+                            )
+                        } else {
+                            LoadSelectedImage(it.uri)
+                        }
+                        Image(
+                            painter = painterResource(id = R.drawable.cancel),
+                            contentDescription = "Cancel Icon",
+                            modifier = Modifier
+                                .size(16.dep)
+                                .clickable {
+                                    selectedFiles.remove(it)
+                                    //selectedFiles.
+                                }
+                        )
+                    }
+                    Text(
+                        text = it.fileName ?: "No file selected",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 10.sep,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        modifier = Modifier
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+fun getFileNameFromUri(context: Context, uri: Uri): String? {
+    val contentResolver = context.contentResolver
+    val cursor = contentResolver.query(uri, null, null, null, null)
+    val nameColumnIndex = cursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+
+    return try {
+        cursor?.moveToFirst()
+        nameColumnIndex?.let {
+            cursor?.getString(it)
+        }
+    } finally {
+        cursor?.close()
+    }
+}
+
+
+@SuppressLint("SuspiciousIndentation")
+@Composable
+fun LoadSelectedImage(uri: Uri) {
+    val selectedImage = rememberImagePainter(data = uri)
+
+
+    Image(
+        painter = selectedImage,
+        contentDescription = "Selected Image",
+        modifier = Modifier
+            .height(64.dep)
+            .width(52.dep),
+        contentScale = ContentScale.Crop,
+
+        )
+
+
+}
+
 
 @Preview(showSystemUi = true)
 @Composable

@@ -31,5 +31,6 @@ enum class MyDataIds{
     commentlist,
     cmntbtn,
     questionfield,
-    imglist
+    imglist,
+    selectedFiles
 }

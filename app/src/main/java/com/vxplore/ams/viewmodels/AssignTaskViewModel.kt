@@ -1,5 +1,6 @@
 package com.vxplore.ams.viewmodels
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +19,7 @@ import com.vxplore.ams.MyDataIds
 import com.vxplore.ams.models.Assigntasklist
 import com.vxplore.ams.models.Comment
 import com.vxplore.ams.models.Commentlist
+import com.vxplore.ams.models.SelectedFile
 import com.vxplore.ams.models.Subtasklist
 import kotlinx.coroutines.launch
 
@@ -67,6 +69,7 @@ class AssignTaskViewModel(
     private val imglist = mutableStateListOf<String>()
 
 
+
     init {
         resolver.addAll(
             MyDataIds.statusBarColor to _statusBarColor,
@@ -78,6 +81,7 @@ class AssignTaskViewModel(
             MyDataIds.commentlist to commentlist,
             MyDataIds.questionfield to questionfield,
             MyDataIds.imglist to imglist,
+
 
 
             )
@@ -111,6 +115,7 @@ class AssignTaskViewModel(
             imglist.add("https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg")
             imglist.add("https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg")
             imglist.add("https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg")
+
 
 
         }
