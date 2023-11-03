@@ -1,5 +1,6 @@
 package com.vxplore.ams.viewmodels
 
+import androidx.compose.material3.DrawerValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
@@ -81,11 +82,12 @@ class TodoViewModel(
 
     }
     private fun NavDrawer(){
-        /*viewModelScope.launch {
-            navigation.scope { navHostController, lifecycleOwner, activityService ->
+        viewModelScope.launch {
+            DrawerValue.Open
+        /*    navigation.scope { navHostController, lifecycleOwner, activityService ->
                 navHostController.navigate(Routes.navdrawer.full)
-            }
-        }*/
+            }*/
+        }
 
 
     }

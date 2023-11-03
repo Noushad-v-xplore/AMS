@@ -47,6 +47,9 @@ class AssignTaskViewModel(
             MyDataIds.addsubtask -> {
                 subtasklist.add(Subtasklist("hello this is status"))
             }
+            MyDataIds.onclickaddbtn -> {
+
+            }
             MyDataIds.cmntbtn -> {
                 item.value = arg as String
                 val split= item.value.split("+")
@@ -67,6 +70,7 @@ class AssignTaskViewModel(
     private val cmnt = mutableStateOf("")
     private val emoji = mutableStateOf("")
     private val imglist = mutableStateListOf<String>()
+    private val selectedFiles = mutableStateListOf<SelectedFile>()
 
 
 
@@ -81,6 +85,7 @@ class AssignTaskViewModel(
             MyDataIds.commentlist to commentlist,
             MyDataIds.questionfield to questionfield,
             MyDataIds.imglist to imglist,
+            MyDataIds.selectedFiles to selectedFiles,
 
 
 

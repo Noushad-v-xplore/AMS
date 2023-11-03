@@ -8,8 +8,6 @@ import android.provider.OpenableColumns
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -169,8 +167,8 @@ fun AssignTaskScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.tik),
-                        contentDescription = stringResource(id = R.string.ok),
+                        painter = painterResource(id = R.drawable.done),
+                        contentDescription = stringResource(id = R.string.done),
                         modifier = Modifier
                             .padding(end = 16.dep)
                             .height(20.dep)
@@ -1140,8 +1138,8 @@ val stroke = Stroke(
 
 @Composable
 fun FilePickerScreen(
-
-) {
+    notifier: NotificationService = notifier(),
+    ) {
     var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
     val selectedFileName = remember { mutableStateOf<String?>(null) }
     var isPDFFile by remember { mutableStateOf(false) }
@@ -1173,6 +1171,7 @@ fun FilePickerScreen(
             .clip(MaterialTheme.shapes.small)
             .clickable {
                 launcher.launch("*/*")
+                notifier.notify(MyDataIds.onclickaddbtn)
             }
             .drawBehind {
                 drawRoundRect(

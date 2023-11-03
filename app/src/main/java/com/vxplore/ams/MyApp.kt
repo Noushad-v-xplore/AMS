@@ -29,7 +29,7 @@ fun MyApp() {
     val navController = rememberNavController()
     NavHost(
         navController,
-        startDestination = Routes.assigntask.full
+        startDestination = Routes.task.full
     ) {
         MyScreen(
             navController = navController,

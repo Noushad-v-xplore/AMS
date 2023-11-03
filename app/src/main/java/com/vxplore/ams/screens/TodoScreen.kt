@@ -98,7 +98,7 @@ fun TodoScreen(
                         .height(18.dep)
                         .width(16.dep)
                         .clickable {
-                            scope.launch { drawerState.close() }
+                            scope.launch { drawerState.open() }
                             notifier.notify(MyDataIds.navdrawer)
                             Log.d("cdc", "clicked")
                         }

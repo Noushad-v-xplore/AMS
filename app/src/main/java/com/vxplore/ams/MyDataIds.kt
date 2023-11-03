@@ -32,5 +32,10 @@ enum class MyDataIds{
     cmntbtn,
     questionfield,
     imglist,
-    selectedFiles
+    selectedFiles,
+    onclickaddbtn,
+    stepitem,
+    addstepbtnclicked,
+    clickstep,
+    nexttaskbtn
 }
