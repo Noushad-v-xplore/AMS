@@ -14,8 +14,12 @@ import com.debduttapanda.j3lib.ResultingActivityHandler
 import com.debduttapanda.j3lib.SoftInputMode
 import com.debduttapanda.j3lib.StatusBarColor
 import com.debduttapanda.j3lib.WirelessViewModelInterface
+import com.debduttapanda.j3lib.scope
 import com.vxplore.ams.MyDataIds
+import com.vxplore.ams.R
+import com.vxplore.ams.Routes
 import com.vxplore.ams.models.CompletedList
+import com.vxplore.ams.models.Drawerlist
 import com.vxplore.ams.models.WorkList
 import kotlinx.coroutines.launch
 
@@ -33,9 +37,9 @@ class TodoViewModel(
     private val note = mutableStateOf("")
     override val notifier = NotificationService { id, arg ->
         when (id) {
-            MyDataIds.navdrawer -> {
+            /*MyDataIds.navdrawer -> {
                 NavDrawer()
-            }
+            }*/
             MyDataIds.note->{
                 note.value = arg as String
             }
@@ -45,18 +49,38 @@ class TodoViewModel(
             MyDataIds.btnUploadclick -> {
                 openDialog.value=!openDialog.value
             }
+            MyDataIds.itemclick->{
+                drawerlistmob.value = arg as Drawerlist
+                if (drawerlistmob.value!!.text == "My Task"){
+                    viewModelScope.launch {
+                        navigation.scope { navHostController, lifecycleOwner, activityService ->
+                            navHostController.navigate(Routes.assigntask.full)
+                        }
+                    }
+                }
+                if (drawerlistmob.value!!.text == "Teams"){
+                    viewModelScope.launch {
+                        navigation.scope { navHostController, lifecycleOwner, activityService ->
+                            navHostController.navigate(Routes.ourteam.full)
+                        }
+                    }
+                }
+            }
         }
     }
     private val openDialog = mutableStateOf(false)
     private val overdue_list = mutableStateListOf<WorkList>()
     private val compleated_list = mutableStateListOf<CompletedList>()
+    private val drawerlist = mutableStateListOf<Drawerlist>()
+    private val drawerlistmob = mutableStateOf<Drawerlist?>(null)
     init {
         resolver.addAll(
             MyDataIds.statusBarColor to _statusBarColor,
             MyDataIds.floatingbtnClicked to openDialog,
             MyDataIds.note to note,
             MyDataIds.worklist to overdue_list,
-            MyDataIds.compleated_list to compleated_list
+            MyDataIds.compleated_list to compleated_list,
+            MyDataIds.drawerlist to drawerlist,
 
 
 
@@ -76,20 +100,31 @@ class TodoViewModel(
             compleated_list.add(CompletedList("Jaya Industry Gateman Changes"))
             compleated_list.add(CompletedList("Jaya Industry Vendor App Changes"))
             compleated_list.add(CompletedList("Jaya Industry Gateman Changes"))
+
+            drawerlist.add(Drawerlist(R.drawable.myhome,"Home"))
+            drawerlist.add(Drawerlist(R.drawable.dotmenu,"My Task"))
+            drawerlist.add(Drawerlist(R.drawable.inbox,"Inbox"))
+            drawerlist.add(Drawerlist(R.drawable.rocket,"Projects"))
+            drawerlist.add(Drawerlist(R.drawable.report,"Reports"))
+            drawerlist.add(Drawerlist(R.drawable.goal,"Goals"))
+            drawerlist.add(Drawerlist(R.drawable.employee,"Employees"))
+            drawerlist.add(Drawerlist(R.drawable.team,"Teams"))
+            drawerlist.add(Drawerlist(R.drawable.settings,"Settings"))
         }
 
-
-
     }
-    private fun NavDrawer(){
+   /* private fun NavDrawer(){
         viewModelScope.launch {
             DrawerValue.Open
-        /*    navigation.scope { navHostController, lifecycleOwner, activityService ->
+            navigation.scope { navHostController, lifecycleOwner, activityService ->
                 navHostController.navigate(Routes.navdrawer.full)
-            }*/
+            }
         }
 
 
-    }
+    }*/
+    /*fun openNavigationDrawer(navigationDrawerScreen: NavigationDrawerScreen) {
+        navigationDrawerScreen.openDrawer()
+    }*/
 
         }

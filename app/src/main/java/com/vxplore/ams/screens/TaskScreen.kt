@@ -523,12 +523,12 @@ fun Add_Step(
                         fontSize = 14.sep,
                         color = Color(0xFF909090),
 
-                    )
+                        )
 
 
                     Image(
                         painter = painterResource(id = R.drawable.done),
-                        contentDescription = stringResource(id =R.string.done),
+                        contentDescription = stringResource(id = R.string.done),
                         modifier = Modifier
                             .height(20.dep)
                             .width(16.dep)
@@ -549,9 +549,9 @@ fun Add_Step(
                 )
             }
         }
-     /*   Spacer(modifier = Modifier
-            .height(4.dep)
-            )*/
+        /*   Spacer(modifier = Modifier
+               .height(4.dep)
+               )*/
         Text(
             text = "Next Task",
             fontSize = 14.sep,

@@ -1,5 +1,6 @@
 package com.vxplore.ams.viewmodels
 
+import android.service.autofill.OnClickAction
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
@@ -14,13 +15,17 @@ import com.debduttapanda.j3lib.ResultingActivityHandler
 import com.debduttapanda.j3lib.SoftInputMode
 import com.debduttapanda.j3lib.StatusBarColor
 import com.debduttapanda.j3lib.WirelessViewModelInterface
+import com.debduttapanda.j3lib.scope
 import com.vxplore.ams.MyDataIds
+import com.vxplore.ams.R
+import com.vxplore.ams.Routes
+import com.vxplore.ams.models.Drawerlist
 import com.vxplore.ams.models.attendenceList
 import com.vxplore.ams.models.taskList
 import kotlinx.coroutines.launch
 
-class MobileTeamViewModel  (
-): WirelessViewModelInterface, ViewModel() {
+class MobileTeamViewModel(
+) : WirelessViewModelInterface, ViewModel() {
     override val navigation = Navigation()
     override val permissionHandler = PermissionHandler()
     override val resultingActivityHandler = ResultingActivityHandler()
@@ -29,21 +34,50 @@ class MobileTeamViewModel  (
     override val resolver = Resolver()
     override val notifier = NotificationService { id, arg ->
         when (id) {
+            "backmobileteam" -> {
+                navigation.scope { navHostController, lifecycleOwner, activityService ->
+                    navHostController.popBackStack()
+                }
+            }
+
+            MyDataIds.itemclick -> {
+                drawerlistmob.value = arg as Drawerlist
+                if (drawerlistmob.value!!.text == "My Task") {
+                    viewModelScope.launch {
+                        navigation.scope { navHostController, lifecycleOwner, activityService ->
+                            navHostController.navigate(Routes.assigntask.full)
+                        }
+                    }
+
+                }
+                if (drawerlistmob.value!!.text == "Teams") {
+                    viewModelScope.launch {
+                        navigation.scope { navHostController, lifecycleOwner, activityService ->
+                            navHostController.navigate(Routes.ourteam.full)
+                        }
+                    }
+
+                }
+            }
 
         }
     }
     private val attendenceList = mutableStateListOf<attendenceList>()
     private val taskList = mutableStateListOf<taskList>()
     private val cmntList = mutableStateListOf<String>()
+    private val drawerlistInmobile = mutableStateListOf<Drawerlist>()
+    private val drawerlistmob = mutableStateOf<Drawerlist?>(null)
+
     init {
         resolver.addAll(
             DataIds.statusBarColor to _statusBarColor,
             MyDataIds.attendenceList to attendenceList,
             MyDataIds.taskList to taskList,
-            MyDataIds.cmntList to cmntList
+            MyDataIds.cmntList to cmntList,
+            MyDataIds.drawerlist to drawerlistInmobile
 
 
-            )
+        )
         _statusBarColor.value = StatusBarColor(
             color = Color.White,
             darkIcons = true
@@ -154,6 +188,18 @@ class MobileTeamViewModel  (
 
 
 
+            drawerlistInmobile.add(Drawerlist(R.drawable.myhome, "Home"))
+            drawerlistInmobile.add(Drawerlist(R.drawable.dotmenu, "My Task"))
+            drawerlistInmobile.add(Drawerlist(R.drawable.inbox, "Inbox"))
+            drawerlistInmobile.add(Drawerlist(R.drawable.rocket, "Projects"))
+            drawerlistInmobile.add(Drawerlist(R.drawable.report, "Reports"))
+            drawerlistInmobile.add(Drawerlist(R.drawable.goal, "Goals"))
+            drawerlistInmobile.add(Drawerlist(R.drawable.employee, "Employees"))
+            drawerlistInmobile.add(Drawerlist(R.drawable.team, "Teams"))
+            drawerlistInmobile.add(Drawerlist(R.drawable.settings, "Settings"))
+
+
+
             cmntList.add("https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Virat_Kohli_portrait.jpg/566px-Virat_Kohli_portrait.jpg")
             cmntList.add("https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Virat_Kohli_portrait.jpg/566px-Virat_Kohli_portrait.jpg")
             cmntList.add("https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Virat_Kohli_portrait.jpg/566px-Virat_Kohli_portrait.jpg")
@@ -165,4 +211,6 @@ class MobileTeamViewModel  (
         }
 
     }
+
+
 }

@@ -123,11 +123,9 @@ fun AssignTaskScreen(
     commentlist: SnapshotStateList<Commentlist> = listState(key = MyDataIds.commentlist),
     notifier: NotificationService = com.debduttapanda.j3lib.notifier(),
 ) {
-
     /*  var isDropdownVisible by remember { mutableStateOf(false) }
       var selectedItem by remember { mutableStateOf("Recently assigned") }
       val items = listOf("Option 1", "Option 2", "Option 3")*/
-
     //var subtaskLists by remember { mutableStateOf(listOf<Subtasklist>()) }
     Box(
         modifier = Modifier
@@ -140,7 +138,6 @@ fun AssignTaskScreen(
             modifier = Modifier
             //.verticalScroll(rememberScrollState())
         ) {
-
             Row(
                 modifier = Modifier
                     .background(Color(0xFFFBFBFB))
@@ -157,11 +154,9 @@ fun AssignTaskScreen(
                         .height(20.dep)
                         .width(20.dep)
                         .clickable {
-
-
+                            notifier.notify(MyDataIds.btnBack)
                             Log.d("cdc", "clicked")
                         }
-
                 )
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -174,11 +169,8 @@ fun AssignTaskScreen(
                             .height(20.dep)
                             .width(20.dep)
                             .clickable {
-
-
                                 Log.d("cdc", "clicked")
                             }
-
                     )
                     Image(
                         painter = painterResource(id = R.drawable.thumb),
@@ -188,11 +180,8 @@ fun AssignTaskScreen(
                             .height(20.dep)
                             .width(18.dep)
                             .clickable {
-
-
                                 Log.d("cdc", "clicked")
                             }
-
                     )
                     Image(
                         painter = painterResource(id = R.drawable.share),
@@ -202,13 +191,9 @@ fun AssignTaskScreen(
                             .height(20.dep)
                             .width(20.dep)
                             .clickable {
-
-
                                 Log.d("cdc", "clicked")
                             }
-
                     )
-
                     Image(
                         painter = painterResource(id = R.drawable.dot),
                         contentDescription = stringResource(id = R.string.settings),
@@ -216,11 +201,8 @@ fun AssignTaskScreen(
                             .height(20.dep)
                             .width(20.dep)
                             .clickable {
-
-
                                 Log.d("cdc", "clicked")
                             }
-
                     )
                 }
 
@@ -233,9 +215,8 @@ fun AssignTaskScreen(
                 elevation = CardDefaults.cardElevation(4.dep),
                 colors = CardDefaults.cardColors(Color(0xFF00000029))
             )
-            {}
-
-
+            {
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -244,7 +225,6 @@ fun AssignTaskScreen(
                     .padding(bottom = 8.dep)
                     .verticalScroll(rememberScrollState())
             ) {
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -254,13 +234,11 @@ fun AssignTaskScreen(
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
-
                             .height(28.dep)
                             .width(28.dep)
                             .border(1.dep, Color(0xFFEFEFEF), CircleShape)
                             .clip(CircleShape)
                             .background(Color(0xFFFFC000))
-
                     ) {
                         AsyncImage(
                             model = R.drawable.person, contentDescription = "",
@@ -269,7 +247,6 @@ fun AssignTaskScreen(
                                 .height(16.dep)
                                 .width(16.dep)
                         )
-
                     }
                     Column {
                         Text(
@@ -279,8 +256,6 @@ fun AssignTaskScreen(
                             modifier = Modifier
                                 .padding(start = 8.dep)
                         )
-
-
                         Text(
                             text = "vik",
                             fontSize = 12.sep,
@@ -309,7 +284,6 @@ fun AssignTaskScreen(
                         }
                     }
                 }
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -325,7 +299,6 @@ fun AssignTaskScreen(
                             .border(.5.dep, Date_red, CircleShape)
                             .clip(CircleShape)
                             .background(Color(0xFFFBFBFB))
-
                     ) {
                         AsyncImage(
                             model = R.drawable.assigndate,
@@ -335,7 +308,6 @@ fun AssignTaskScreen(
                                 .height(16.dep)
                                 .width(16.dep)
                         )
-
                     }
                     Column {
                         Text(
@@ -345,8 +317,6 @@ fun AssignTaskScreen(
                             modifier = Modifier
                                 .padding(start = 8.dep)
                         )
-
-
                         Text(
                             text = "20 Jul 2023",
                             fontSize = 12.sep,
@@ -357,7 +327,6 @@ fun AssignTaskScreen(
                         )
                     }
                 }
-
                 Text(
                     text = stringResource(id = R.string.description),
                     fontSize = 12.sep,
@@ -397,16 +366,13 @@ fun AssignTaskScreen(
                         .padding(horizontal = 16.dep)
                         .fillMaxWidth()
                 ) {
-
                     Text(
                         text = stringResource(id = R.string.projects),
                         fontSize = 12.sep,
                         fontWeight = FontWeight.Bold,
                         color = Extra_light_Gray,
                         modifier = Modifier
-
                     )
-
                     Image(
                         painter = painterResource(id = R.drawable.dot),
                         contentDescription = stringResource(id = R.string.settings),
@@ -414,13 +380,9 @@ fun AssignTaskScreen(
                             .height(20.dep)
                             .width(20.dep)
                             .clickable {
-
-
                                 Log.d("cdc", "clicked")
                             }
-
                     )
-
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -433,18 +395,15 @@ fun AssignTaskScreen(
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
-
                             .height(14.dep)
                             .width(14.dep)
                             //.border(.5.dep, Box_Blue, RoundedCornerShape(4.dep))
                             .clip(RoundedCornerShape(4.dep))
                             .background(Box_Blue)
-
-                    ) {}
+                    ) {
+                    }
                     ProjectDropdown()
-
                 }
-
                 Text(
                     text = stringResource(id = R.string.subtasks),
                     fontSize = 12.sep,
@@ -452,7 +411,6 @@ fun AssignTaskScreen(
                     color = Extra_light_Gray,
                     modifier = Modifier
                         .padding(top = 12.dep, start = 16.dep)
-
                 )
                 LazyColumn(
                     verticalArrangement = Arrangement.Center,
@@ -470,7 +428,6 @@ fun AssignTaskScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
@@ -489,15 +446,10 @@ fun AssignTaskScreen(
                                         .height(12.dep)
                                         .width(12.dep)
                                         .clickable {
-
-
                                             Log.d("cdc", "clicked")
                                         }
                                 )
-
-
                             }
-
                             Text(
                                 text = it.Subtask,
                                 fontSize = 14.sep,
@@ -505,7 +457,6 @@ fun AssignTaskScreen(
                                 color = Extra_light_Gray,
                                 modifier = Modifier
                                     .padding(start = 8.dep)
-
                             )
                         }
                         Spacer(
@@ -514,12 +465,10 @@ fun AssignTaskScreen(
                         )
                     }
                 }
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-
                     Button(
                         onClick = {
                             notifier.notify(MyDataIds.addsubtask)
@@ -528,7 +477,6 @@ fun AssignTaskScreen(
                         //.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(White_Background),
                     ) {
-
                         Image(
                             painter = painterResource(id = R.drawable.add),
                             contentDescription = stringResource(id = R.string.btn_subtask),
@@ -543,9 +491,7 @@ fun AssignTaskScreen(
                             color = Extra_light_Gray
                         )
                     }
-
                 }
-
                 Text(
                     text = stringResource(id = R.string.attachments),
                     fontSize = 12.sep,
@@ -553,9 +499,7 @@ fun AssignTaskScreen(
                     color = Extra_light_Gray,
                     modifier = Modifier
                         .padding(top = 8.dep, start = 16.dep)
-
                 )
-
                 //DashedBorderBox()
                 val stroke = Stroke(
                     width = 2f,
@@ -566,7 +510,6 @@ fun AssignTaskScreen(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     FilePickerScreen()
                     /* Column(
                          horizontalAlignment = Alignment.CenterHorizontally,
@@ -627,7 +570,6 @@ fun AssignTaskScreen(
                     modifier = Modifier
                         .height(12.dep)
                 )
-
                 /*  LazyColumn(
                       verticalArrangement = Arrangement.Center,
                       modifier = Modifier
@@ -641,7 +583,6 @@ fun AssignTaskScreen(
                           .background(Color(0xFFF5F5F5))
                   ) {
                       items(count = 1) {*/
-
                 Box(
                     //contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -653,7 +594,6 @@ fun AssignTaskScreen(
                         .background(Color(0xFFF5F5F5))
                 ) {
                     Column {
-
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
@@ -667,7 +607,6 @@ fun AssignTaskScreen(
                                     //.border(1.dep, Color(0xFFEFEFEF), CircleShape)
                                     .clip(CircleShape)
                                     .background(Color(0xFFFF817E))
-
                             ) {
                                 AsyncImage(
                                     model = R.drawable.person, contentDescription = "",
@@ -676,11 +615,8 @@ fun AssignTaskScreen(
                                         .height(16.dep)
                                         .width(16.dep)
                                 )
-
                             }
                             Column {
-
-
                                 Text(
                                     text = "Debdutta Panda created this task",
                                     fontSize = 12.sep,
@@ -703,8 +639,6 @@ fun AssignTaskScreen(
                             modifier = Modifier
                                 .height(4.dep)
                         )
-
-
                         LazyColumn(
                             verticalArrangement = Arrangement.Center,
                             modifier = Modifier
@@ -718,8 +652,6 @@ fun AssignTaskScreen(
                             //.background(Color(0xFFF5F5F5))
                         ) {
                             items(assigntasklist) {
-
-
                                 FlowRow(
                                     //verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
@@ -774,12 +706,10 @@ fun AssignTaskScreen(
                 }
                 /*   }
                }*/
-
                 Spacer(
                     modifier = Modifier
                         .height(8.dep)
                 )
-
                 LazyRow(
                     modifier = Modifier
                         .padding(start = 16.dep, end = 16.dep)
@@ -816,8 +746,7 @@ fun AssignTaskScreen(
                                 //.border(1.dep, Color.DarkGray, CircleShape)
                                 .clip(RoundedCornerShape(20.dep)),
                             colors = ButtonDefaults.buttonColors(Color(0xFFF5F5F5)),
-
-                            )
+                        )
                         {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -832,7 +761,6 @@ fun AssignTaskScreen(
                                     modifier = Modifier
                                     // .padding(horizontal = 8.dep)
                                 )
-
                                 AsyncImage(
                                     model = it.Emoji,
                                     contentDescription = stringResource(id = R.string.add_attachment),
@@ -850,7 +778,6 @@ fun AssignTaskScreen(
                                 .width(8.dep)
                         )
                     }
-
                 }
                 Spacer(
                     modifier = Modifier
@@ -898,7 +825,6 @@ fun AssignTaskScreen(
                                 .height(24.dep)
                                 .width(24.dep)
                                 .clickable {
-
                                 }
                         )
                         Image(
@@ -909,7 +835,6 @@ fun AssignTaskScreen(
                                 .height(24.dep)
                                 .width(24.dep)
                                 .clickable {
-
                                 }
                         )
                         Image(
@@ -920,7 +845,6 @@ fun AssignTaskScreen(
                                 .height(24.dep)
                                 .width(24.dep)
                                 .clickable {
-
                                 }
                         )
                         Image(
@@ -931,7 +855,6 @@ fun AssignTaskScreen(
                                 .height(24.dep)
                                 .width(24.dep)
                                 .clickable {
-
                                 }
                         )
                         Image(
@@ -942,7 +865,6 @@ fun AssignTaskScreen(
                                 .height(24.dep)
                                 .width(24.dep)
                                 .clickable {
-
                                 }
                         )
                     }
@@ -953,8 +875,6 @@ fun AssignTaskScreen(
         }
     }
 }
-
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -978,7 +898,6 @@ fun TaskDropdown(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 8.dep)
             )
-
             Image(
                 painter = painterResource(id = R.drawable.dropdown),
                 contentDescription = stringResource(id = R.string.dropdown),
@@ -986,7 +905,6 @@ fun TaskDropdown(
                     .size(20.dep)
             )
         }
-
         if (expanded) {
             DropdownMenu(
                 modifier = Modifier
@@ -1003,15 +921,11 @@ fun TaskDropdown(
                             expanded = false
                         }
                     )
-
-
                 }
             }
         }
     }
 }
-
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1020,7 +934,6 @@ fun ProjectDropdown(
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("Bikrimart Project") }
-
     Column(
     ) {
         Row(
@@ -1034,7 +947,6 @@ fun ProjectDropdown(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 8.dep)
             )
-
             Image(
                 painter = painterResource(id = R.drawable.dropdown),
                 contentDescription = stringResource(id = R.string.dropdown),
@@ -1042,7 +954,6 @@ fun ProjectDropdown(
                     .size(20.dep)
             )
         }
-
         if (expanded) {
             DropdownMenu(
                 expanded = expanded,
@@ -1061,8 +972,6 @@ fun ProjectDropdown(
         }
     }
 }
-
-
 @Composable
 fun RoundedImageStack(
     imglist: SnapshotStateList<String> = listState(key = MyDataIds.imglist)
@@ -1096,7 +1005,6 @@ fun RoundedImageStack(
                     .border(0.5.dep, Color.White, CircleShape)
             )
         }
-
         // Show the count of hidden images with a custom offset
         if (hiddenImageCount > 0) {
             val hiddenImagesOffsetX = (visibleImageCount - 1) * overlapOffsetX
@@ -1130,21 +1038,18 @@ fun RoundedImageStack(
     }
 }
 
-
 val stroke = Stroke(
     width = 2f,
     pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
 )
-
 @Composable
 fun FilePickerScreen(
     notifier: NotificationService = notifier(),
-    ) {
+) {
     var selectedFileUri by remember { mutableStateOf<Uri?>(null) }
     val selectedFileName = remember { mutableStateOf<String?>(null) }
     var isPDFFile by remember { mutableStateOf(false) }
     var selectedFiles by remember { mutableStateOf<MutableList<SelectedFile>>(mutableListOf()) }
-
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
@@ -1156,11 +1061,9 @@ fun FilePickerScreen(
             selectedFiles.add(selectedFile)
         }
     }
-
     val openFileIntentLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         }
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -1189,7 +1092,6 @@ fun FilePickerScreen(
                 .width(24.dep)
         )
     }
-
     selectedFileUri?.let {
         LazyRow(
             modifier = Modifier
@@ -1198,7 +1100,6 @@ fun FilePickerScreen(
                 .fillMaxWidth()
         ) {
             items(selectedFiles) { it ->
-
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -1247,13 +1148,10 @@ fun FilePickerScreen(
         }
     }
 }
-
-
 fun getFileNameFromUri(context: Context, uri: Uri): String? {
     val contentResolver = context.contentResolver
     val cursor = contentResolver.query(uri, null, null, null, null)
     val nameColumnIndex = cursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-
     return try {
         cursor?.moveToFirst()
         nameColumnIndex?.let {
@@ -1263,14 +1161,10 @@ fun getFileNameFromUri(context: Context, uri: Uri): String? {
         cursor?.close()
     }
 }
-
-
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun LoadSelectedImage(uri: Uri) {
     val selectedImage = rememberImagePainter(data = uri)
-
-
     Image(
         painter = selectedImage,
         contentDescription = "Selected Image",
@@ -1278,13 +1172,8 @@ fun LoadSelectedImage(uri: Uri) {
             .height(64.dep)
             .width(52.dep),
         contentScale = ContentScale.Crop,
-
         )
-
-
 }
-
-
 @Preview(showSystemUi = true)
 @Composable
 fun previewAssignTask() {

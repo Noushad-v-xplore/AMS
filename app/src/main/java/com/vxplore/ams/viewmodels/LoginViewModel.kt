@@ -1,5 +1,6 @@
 package com.vxplore.ams.viewmodels
 
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -32,17 +33,20 @@ class LoginViewModel(
     private val password = mutableStateOf("")
     override val notifier = NotificationService { id, arg ->
         when (id) {
-            MyDataIds.login ->{
+            MyDataIds.login -> {
                 Login()
             }
-            MyDataIds.email->{
+
+            MyDataIds.email -> {
                 email.value = arg as String
             }
-            MyDataIds.password->{
+
+            MyDataIds.password -> {
                 password.value = arg as String
             }
         }
     }
+
     init {
         resolver.addAll(
             DataIds.statusBarColor to _statusBarColor,
@@ -57,10 +61,16 @@ class LoginViewModel(
         //Login()
         //login_check()
     }
+
     private fun Login() {
         viewModelScope.launch {
-            navigation.scope { navHostController, lifecycleOwner, activityService ->
-                navHostController.navigate(Routes.employeeDashboard.full)
+            if (email.value == "admin" && password.value == "1234") {
+                navigation.scope { navHostController, lifecycleOwner, activityService ->
+                    navHostController.navigate(Routes.todo.full)
+                }
+            }
+            else{
+               toast("login Failed")
             }
         }
     }

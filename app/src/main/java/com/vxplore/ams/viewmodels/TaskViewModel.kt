@@ -31,6 +31,11 @@ class TaskViewModel (
     private val note = mutableStateOf("")
     override val notifier = NotificationService { id, arg ->
         when (id) {
+            "backtask"->{
+                navigation.scope { navHostController, lifecycleOwner, activityService ->
+                    navHostController.popBackStack()
+                }
+            }
             MyDataIds.note->{
                 note.value = arg as String
             }

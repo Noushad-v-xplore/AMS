@@ -37,5 +37,10 @@ enum class MyDataIds{
     stepitem,
     addstepbtnclicked,
     clickstep,
-    nexttaskbtn
+    nexttaskbtn,
+    selectedDrawerMenu,
+    drawerlist,
+    itemclick,
+    clickOnMobileTeam,
+    btnBack
 }

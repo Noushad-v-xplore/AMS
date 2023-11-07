@@ -15,6 +15,7 @@ import com.debduttapanda.j3lib.ResultingActivityHandler
 import com.debduttapanda.j3lib.SoftInputMode
 import com.debduttapanda.j3lib.StatusBarColor
 import com.debduttapanda.j3lib.WirelessViewModelInterface
+import com.debduttapanda.j3lib.scope
 import com.vxplore.ams.MyDataIds
 import com.vxplore.ams.models.Assigntasklist
 import com.vxplore.ams.models.Comment
@@ -38,6 +39,11 @@ class AssignTaskViewModel(
     private val questionfield = mutableStateOf("")
     override val notifier = NotificationService { id, arg ->
         when (id) {
+            "backassigntask"->{
+                navigation.scope { navHostController, lifecycleOwner, activityService ->
+                    navHostController.popBackStack()
+                }
+            }
             MyDataIds.description -> {
                 description.value = arg as String
             }
@@ -57,6 +63,11 @@ class AssignTaskViewModel(
                 cmnt.value = split[0]
                 emoji.value = split[1]
                 assigntasklist.add(Assigntasklist("","", Comment(cmnt.value,emoji.value)))
+            }
+            MyDataIds.btnBack->{
+                navigation.scope { navHostController, lifecycleOwner, activityService ->
+                    navHostController.popBackStack()
+                }
             }
 
         }

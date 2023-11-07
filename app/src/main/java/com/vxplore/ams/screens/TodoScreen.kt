@@ -22,12 +22,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AppRegistration
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -43,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,6 +61,7 @@ import androidx.navigation.compose.rememberNavController
 import com.debduttapanda.j3lib.NotificationService
 import com.debduttapanda.j3lib.boolState
 import com.debduttapanda.j3lib.dep
+import com.debduttapanda.j3lib.intState
 import com.debduttapanda.j3lib.listState
 import com.debduttapanda.j3lib.notifier
 import com.debduttapanda.j3lib.sep
@@ -57,473 +69,877 @@ import com.debduttapanda.j3lib.stringState
 import com.vxplore.ams.MyDataIds
 import com.vxplore.ams.R
 import com.vxplore.ams.models.CompletedList
+import com.vxplore.ams.models.Drawerlist
 import com.vxplore.ams.models.WorkList
 import kotlinx.coroutines.launch
-
-
 
 
 @Composable
 fun TodoScreen(
     notifier: NotificationService = notifier(),
     floatingbtnState: Boolean = boolState(key = MyDataIds.floatingbtnClicked).value,
-    overdue_list: SnapshotStateList<WorkList> = listState(key =MyDataIds.worklist),
-    compleated_list: SnapshotStateList<CompletedList> = listState(key =MyDataIds.compleated_list)
+    overdue_list: SnapshotStateList<WorkList> = listState(key = MyDataIds.worklist),
+    compleated_list: SnapshotStateList<CompletedList> = listState(key = MyDataIds.compleated_list),
+    drawerlist: SnapshotStateList<Drawerlist> = listState(key = MyDataIds.drawerlist)
 ) {
-    val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    Box(
+    ModalNavigationDrawer(
         modifier = Modifier
-            .background(Color(0xFFF9F9F9))
-            .fillMaxSize(),
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Row(
+            //.padding(end = 64.dep)
+            .background(Color(0xFFF9F9F9)),
+        drawerContent = {
+            ModalDrawerSheet(
                 modifier = Modifier
+                    .padding(end = 64.dep)
                     .background(Color(0xFFF9F9F9))
-                    .padding(horizontal = 16.dep)
-                    .height(54.dep)
+                    .fillMaxHeight()
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.menu),
-                    contentDescription = stringResource(id = R.string.menu),
-                    modifier = Modifier
-                        .height(18.dep)
-                        .width(16.dep)
-                        .clickable {
-                            scope.launch { drawerState.open() }
-                            notifier.notify(MyDataIds.navdrawer)
-                            Log.d("cdc", "clicked")
-                        }
+                Spacer(
+                    Modifier
+                        .height(16.dep)
                 )
                 Image(
                     painter = painterResource(id = R.drawable.logo),
                     contentDescription = stringResource(id = R.string.logo),
                     modifier = Modifier
-                        .height(44.dep)
-                        .width(43.dep)
+                        .padding(start = 16.dep)
+                        .height(103.dep)
+                        .width(101.dep)
+                    /*.clickable {
+                        scope.launch { drawerState.open() }
+                        Log.d("cdc", "clicked")
+                    }*/
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.bell),
-                    contentDescription = stringResource(id = R.string.notification),
+                Spacer(
+                    Modifier
+                        .height(16.dep)
+                )
+                Text(
+                    text = stringResource(id = R.string.vxplore_technologies),
+                    fontSize = 24.sep,
+                    color = Color(0xFF4D4D4D),
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier
-                        .height(24.72.dep)
-                        .width(22.81.dep)
+                        .padding(start = 28.dep)
                 )
-            }
-            Card(
-                modifier = Modifier
-                    //.background(color = Color(0xFFF9F9F9))
-                    .height(1.dep)
-                    .fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(4.dep),
-                colors = CardDefaults.cardColors(Color(0xFF00000029))
-            ) {
-            }
-            Spacer(
-                modifier = Modifier
-                    .height(22.dep)
-            )
-            Text(
-                text = stringResource(id = R.string.todo),
-                fontSize = 24.sep,
-                color = Color(0xFF6D6D6D),
-                modifier = Modifier
-            )
-            Text(
-                text = stringResource(id = R.string.today_overdue),
-                fontSize = 10.sep,
-                color = Color(0xFF6D6D6D),
-                modifier = Modifier
-                    .padding(start = 20.dep)
-                    .align(Alignment.Start)
-            )
-            Spacer(
-                modifier = Modifier
-                    .height(6.dep)
-            )
-            LazyColumn(
-                modifier = Modifier
-                    .height(180.dep)
-            ) {
-                items(overdue_list) {
-                    Card(
-                        modifier = Modifier
-                            .padding(start = 20.dp, end = 20.dp)
-                            //.border(2.dp, Color.Black)
-                            .background(color = Color.White)
-                            .height(85.dp)
-                            .fillMaxWidth(),
-                        elevation = CardDefaults.cardElevation(8.dp),
-                        shape = RoundedCornerShape(4.dp),
-                        colors = CardDefaults.cardColors(Color.White)
-                    ) {
+                Spacer(
+                    Modifier
+                        .height(16.dep)
+                )
+                LazyColumn(
+                    modifier = Modifier
+                        //.background(Color(0xFFF9F9F9))
+                        .height(500.dep)
+                        //.fillMaxHeight()
+                        .fillMaxWidth()
+                ) {
+                    items(drawerlist) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
-                                .background(color = Color.White)
-                                .fillMaxWidth()
-                                .padding(horizontal = 4.dp)
-                                .height(52.dp)
+                                .clickable {
+                                    scope.launch { drawerState.close() }
+                                    notifier.notify(MyDataIds.itemclick, it)
+                                    Log.d("cdc", "clicked")
+                                }
                         ) {
-                            Text(
-                                text = it.Task,
-                                fontSize = 14.sep,
-                                color = Color(0xFF707070),
-                                modifier = Modifier
-                                    .padding(start = 8.dep)
-                            )
                             Image(
-                                painter = painterResource(id = R.drawable.tik),
-                                contentDescription = "",
+                                painter = painterResource(id = it.image),
+                                contentDescription = "" /*stringResource(id = R.string.home)*/,
                                 modifier = Modifier
-                                    .height(11.dep)
-                                    .width(16.dep)
+                                    .padding(start = 40.dep)
+                                    .height(24.74.dep)
+                                    .width(24.74.dep)
+                            )
+                            Text(
+                                text = it.text /*stringResource(id = R.string.home)*/,
+                                fontSize = 18.sep,
+                                color = Color(0xFF707070),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .padding(start = 24.dep)
+                                /* .clickable {
+                                     scope.launch { drawerState.close() }
+                                     Log.d("cdc", "clicked")
+                                 }*/
                             )
                         }
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            //horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .background(color = Color(0xFFF7F7F7))
-                                .fillMaxWidth()
-                                .fillMaxHeight()
-                                .padding(horizontal = 4.dp)
+                        Spacer(
+                            Modifier
+                                .height(28.dep)
                         )
-                        {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                //horizontalArrangement = Arrangement.SpaceBetween
-                            )
-                            {
-                                Image(
-                                    painter = painterResource(id = R.drawable.date),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .padding(start = 4.dep)
-                                        .height(11.dep)
-                                        .width(16.dep)
-                                )
-                                Text(
-                                    text = it.Date,
-                                    fontSize = 10.sep,
-                                    color = Color(0xFFC63434),
-                                    modifier = Modifier
-                                        .padding(start = 1.dep)
-                                )
-                            }
-                            Spacer(
-                                modifier = Modifier
-                                    .width(8.dep)
-                            )
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                //horizontalArrangement = Arrangement.SpaceBetween
-                            )
-                            {
-                                Image(
-                                    painter = painterResource(id = R.drawable.person),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .height(11.dep)
-                                        .width(16.dep)
-                                )
-                                Text(
-                                    text = it.Name,
-                                    fontSize = 10.sep,
-                                    color = Color(0xFF707070),
-                                    modifier = Modifier
-                                        .padding(start = 1.dep)
-                                )
-                            }
-                            Spacer(
-                                modifier = Modifier
-                                    .width(8.dep)
-                            )
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                //horizontalArrangement = Arrangement.SpaceBetween
-                            )
-                            {
-                                Image(
-                                    painter = painterResource(id = R.drawable.priority),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .height(11.dep)
-                                        .width(16.dep)
-                                )
-                                Text(
-                                    text = it.Priority,
-                                    fontSize = 10.sep,
-                                    color = Color(0xFF707070),
-                                    modifier = Modifier
-                                        .padding(start = 1.dep)
-                                )
-                            }
-                        }
                     }
-                    Spacer(
-                        modifier = Modifier
-                            .height(12.dep)
-                    )
                 }
+                /* Row(
+                     verticalAlignment = Alignment.CenterVertically
+                 ) {
+
+                     Image(
+                         painter = painterResource(id = R.drawable.dotmenu),
+                         contentDescription = stringResource(id = R.string.mytask),
+                         modifier = Modifier
+                             .padding(start = 40.dep)
+                             .height(24.74.dep)
+                             .width(24.74.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+
+                     Text(
+                         text = stringResource(id = R.string.mytask),
+                         fontSize = 18.sep,
+                         color = Color(0xFF707070),
+                         fontWeight = FontWeight.Bold,
+                         modifier = Modifier
+                             .padding(start = 24.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+                 }
+                 Spacer(
+                     Modifier
+                         .height(28.dep)
+                 )
+                 Row(
+                     verticalAlignment = Alignment.CenterVertically
+                 ) {
+
+                     Image(
+                         painter = painterResource(id = R.drawable.inbox),
+                         contentDescription = stringResource(id = R.string.inbox),
+                         modifier = Modifier
+                             .padding(start = 40.dep)
+                             .height(24.71.dep)
+                             .width(24.74.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+
+                     Text(
+                         text = stringResource(id = R.string.inbox),
+                         fontSize = 18.sep,
+                         color = Color(0xFF707070),
+                         fontWeight = FontWeight.Bold,
+                         modifier = Modifier
+                             .padding(start = 24.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+                 }
+                 Spacer(
+                     Modifier
+                         .height(28.dep)
+                 )
+                 Row(
+                     verticalAlignment = Alignment.CenterVertically
+                 ) {
+
+                     Image(
+                         painter = painterResource(id = R.drawable.rocket),
+                         contentDescription = stringResource(id = R.string.projects),
+                         modifier = Modifier
+                             .padding(start = 40.dep)
+                             .height(24.71.dep)
+                             .width(24.74.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+
+                     Text(
+                         text = stringResource(id = R.string.projects),
+                         fontSize = 18.sep,
+                         color = Color(0xFF707070),
+                         fontWeight = FontWeight.Bold,
+                         modifier = Modifier
+                             .padding(start = 24.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+                 }
+                 Spacer(
+                     Modifier
+                         .height(28.dep)
+                 )
+
+                 Row(
+                     verticalAlignment = Alignment.CenterVertically
+                 ) {
+
+                     Image(
+                         painter = painterResource(id = R.drawable.report),
+                         contentDescription = stringResource(id = R.string.reports),
+                         modifier = Modifier
+                             .padding(start = 40.dep)
+                             .height(24.71.dep)
+                             .width(24.74.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+
+                     Text(
+                         text = stringResource(id = R.string.reports),
+                         fontSize = 18.sep,
+                         color = Color(0xFF707070),
+                         fontWeight = FontWeight.Bold,
+                         modifier = Modifier
+                             .padding(start = 24.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+                 }
+                 Spacer(
+                     Modifier
+                         .height(28.dep)
+                 )
+                 Row(
+                     verticalAlignment = Alignment.CenterVertically
+                 ) {
+
+                     Image(
+                         painter = painterResource(id = R.drawable.goal),
+                         contentDescription = stringResource(id = R.string.goals),
+                         modifier = Modifier
+                             .padding(start = 40.dep)
+                             .height(24.71.dep)
+                             .width(24.74.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+
+                     Text(
+                         text = stringResource(id = R.string.goals),
+                         fontSize = 18.sep,
+                         color = Color(0xFF707070),
+                         fontWeight = FontWeight.Bold,
+                         modifier = Modifier
+                             .padding(start = 24.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+                 }
+                 Spacer(
+                     Modifier
+                         .height(28.dep)
+                 )
+                 Row(
+                     verticalAlignment = Alignment.CenterVertically
+                 ) {
+
+                     Image(
+                         painter = painterResource(id = R.drawable.employee),
+                         contentDescription = stringResource(id = R.string.employees),
+                         modifier = Modifier
+                             .padding(start = 40.dep)
+                             .height(28.71.dep)
+                             .width(24.74.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+
+                     Text(
+                         text = stringResource(id = R.string.employees),
+                         fontSize = 18.sep,
+                         color = Color(0xFF707070),
+                         fontWeight = FontWeight.Bold,
+                         modifier = Modifier
+                             .padding(start = 24.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+                 }
+                 Spacer(
+                     Modifier
+                         .height(28.dep)
+                 )
+                 Row(
+                     verticalAlignment = Alignment.CenterVertically
+                 ) {
+
+                     Image(
+                         painter = painterResource(id = R.drawable.team),
+                         contentDescription = stringResource(id = R.string.teams),
+                         modifier = Modifier
+                             .padding(start = 40.dep)
+                             .height(20.71.dep)
+                             .width(24.74.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+
+                     Text(
+                         text = stringResource(id = R.string.teams),
+                         fontSize = 18.sep,
+                         color = Color(0xFF707070),
+                         fontWeight = FontWeight.Bold,
+                         modifier = Modifier
+                             .padding(start = 24.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+                 }
+                 Spacer(
+                     Modifier
+                         .height(28.dep)
+                 )
+                 Row(
+                     verticalAlignment = Alignment.CenterVertically
+                 ) {
+
+                     Image(
+                         painter = painterResource(id = R.drawable.settings),
+                         contentDescription = stringResource(id = R.string.settings),
+                         modifier = Modifier
+                             .padding(start = 40.dep)
+                             .height(24.71.dep)
+                             .width(24.74.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+
+                     Text(
+                         text = stringResource(id = R.string.settings),
+                         fontSize = 18.sep,
+                         color = Color(0xFF707070),
+                         fontWeight = FontWeight.Bold,
+                         modifier = Modifier
+                             .padding(start = 24.dep)
+                             .clickable {
+                                 scope.launch { drawerState.close() }
+                                 Log.d("cdc", "clicked")
+                             }
+                     )
+                 }*/
+                /*  NavigationDrawerItem(
+                      icon = { Icon(Icons.Default.Home, contentDescription = "") },
+                      label = { Text("Home") },
+                      selected = 1 == selectedDrawerMenu,
+                      onClick = {
+                          scope.launch { drawerState.close() }
+                          // notifier.notify(DataIds.selectedDrawerMenu,3)
+                      },
+                      modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                  )
+                  Spacer(Modifier.height(12.dep))
+                  NavigationDrawerItem(
+                      icon = { Icon(Icons.Default.List, contentDescription = "") },
+                      label = { Text("Order List") },
+                      selected = 1 == selectedDrawerMenu,
+                      onClick = {
+                          scope.launch { drawerState.close() }
+                          //notifier.notify(DataIds.selectedDrawerMenu,1)
+                      },
+                      modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                  )
+                  Spacer(Modifier.height(12.dep))
+                  NavigationDrawerItem(
+                      icon = { Icon(Icons.Default.AppRegistration, contentDescription = "") },
+                      label = { Text("Attendance") },
+                      selected = 2 == selectedDrawerMenu,
+                      onClick = {
+                          scope.launch { drawerState.close() }
+                          notifier.notify(MyDataIds.selectedDrawerMenu,2)
+                      },
+                      modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                  )
+                  Spacer(Modifier.height(12.dep))
+                  NavigationDrawerItem(
+                      icon = { Icon(Icons.Default.Logout, contentDescription = "") },
+                      label = { Text("Logout") },
+                      selected = 0 == selectedDrawerMenu,
+                      onClick = {
+                          scope.launch { drawerState.close() }
+                          notifier.notify(MyDataIds.selectedDrawerMenu,0)
+                      },
+                      modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                  )*/
             }
-            Spacer(
-                modifier = Modifier
-                    .height(28.dep)
-            )
-            Text(
-                text = stringResource(id = R.string.completed),
-                fontSize = 10.sep,
-                color = Color(0xFF6D6D6D),
-                modifier = Modifier
-                    .padding(start = 20.dep)
-                    .align(Alignment.Start)
-            )
-            Spacer(
-                modifier = Modifier
-                    .height(6.dep)
-            )
-            LazyColumn(
-                modifier = Modifier
-                    .height(180.dep)
-            ) {
-                items(compleated_list) {
-                    Card(
-                        modifier = Modifier
-                            .padding(start = 20.dp, end = 20.dp)
-                            //.border(2.dp, Color.Black)
-                            .background(color = Color.White)
-                            .height(40.dp)
-                            .fillMaxWidth(),
-                        elevation = CardDefaults.cardElevation(8.dp),
-                        shape = RoundedCornerShape(4.dp),
-                        colors = CardDefaults.cardColors(Color.White)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            //horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .background(color = Color.White)
-                                .fillMaxWidth()
-                                .fillMaxHeight()
-                                .padding(horizontal = 4.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.greentik),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .height(24.dep)
-                                    .width(24.dep)
-                            )
-                            Text(
-                                text = it.ColpletedTask,
-                                fontSize = 14.sep,
-                                color = Color(0xFF707070),
-                                modifier = Modifier
-                                    .padding(start = 1.dep)
-                            )
-                        }
-                    }
-                    Spacer(
-                        modifier = Modifier
-                            .height(8.dep)
-                    )
-                }
-            }
-            Box(
-                contentAlignment = Alignment.BottomCenter,
-                modifier = Modifier
-                    .background(Color(0xFFF9F9F9))
-                    .fillMaxSize()
+        },
+        //gesturesEnabled = false,
+        drawerState = drawerState
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color(0xFFF9F9F9))
+                .fillMaxSize(),
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
                 Row(
                     modifier = Modifier
+                        .background(Color(0xFFF9F9F9))
+                        .padding(horizontal = 16.dep)
                         .height(54.dep)
-                        .background(Color(0xFF434343))
-                        .padding(horizontal = 12.dep)
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter),
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.home),
-                            contentDescription = stringResource(id = R.string.home),
-                            modifier = Modifier
-                                //.padding(start = 12.dep)
-                                .height(20.89.dep)
-                                .width(20.89.dep)
-                                .clickable {
-                                    Log.d("fgfg", "clicked")
-                                }
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .height(4.dep)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.home),
-                            fontSize = 10.sep,
-                            color = Color(0xFFEFEFEF),
-                            /* modifier = Modifier
-                                 .padding(start = 8.dep)*/
-                        )
-                    }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.task),
-                            contentDescription = stringResource(id = R.string.mytask),
-                            modifier = Modifier
-                                //.padding(start = 8.dep)
-                                .height(19.dep)
-                                .width(19.dep)
-                                .clickable {
-                                    Log.d("fgfg", "clicked")
-                                }
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .height(4.dep)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.mytask),
-                            fontSize = 10.sep,
-                            color = Color(0xFF6D6D6D),
-                        )
-                    }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.inbox),
-                            contentDescription = stringResource(id = R.string.inbox),
-                            modifier = Modifier
-                                //.padding(start = 4.dep)
-                                .height(19.21.dep)
-                                .width(22.41.dep)
-                                .clickable {
-                                    Log.d("fgfg", "clicked")
-                                }
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .height(4.dep)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.inbox),
-                            fontSize = 10.sep,
-                            color = Color(0xFF6D6D6D),
-                        )
-                    }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.search),
-                            contentDescription = stringResource(id = R.string.search),
-                            modifier = Modifier
-                                //.padding(start = 10.dep)
-                                .height(19.21.dep)
-                                .width(19.13.dep)
-                                .clickable {
-                                    Log.d("fgfg", "clicked")
-                                }
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .height(4.dep)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.search),
-                            fontSize = 10.sep,
-                            color = Color(0xFF6D6D6D),
-                        )
-                    }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.bell2),
-                            contentDescription = stringResource(id = R.string.notification),
-                            modifier = Modifier
-                                //.padding(start = 10.dep)
-                                .height(20.68.dp)
-                                .width(19.08.dp)
-                                .clickable {
-                                    Log.d("fgfg", "clicked")
-                                }
-                        )
-                        Spacer(
-                            modifier = Modifier
-                                .height(4.dep)
-                        )
-                        Text(
-                            text = stringResource(id = R.string.notification),
-                            fontSize = 10.sep,
-                            color = Color(0xFF6D6D6D),
-                        )
-                    }
-                }
-            }
-        }
-        Box(
-            contentAlignment = Alignment.BottomEnd,
-            modifier = Modifier
-                .padding(end = 12.dep, bottom = 64.dep)
-                .fillMaxSize()
-        ) {
-            if (!floatingbtnState) {
-                Row(
-                    modifier = Modifier
-                        .wrapContentSize(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    FloatingActionButton(
-                        onClick = {
-                            notifier.notify(MyDataIds.floatingDialogue)
-                        },
+                    Image(
+                        painter = painterResource(id = R.drawable.menu),
+                        contentDescription = stringResource(id = R.string.menu),
                         modifier = Modifier
-                            .height(71.dep)
-                            .width(71.dep),
-                        shape = CircleShape,
-                        containerColor = Color.White,
-                        elevation = FloatingActionButtonDefaults.elevation(2.dep)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.add),
-                            contentDescription = stringResource(id = R.string.add_task),
+                            .height(18.dep)
+                            .width(16.dep)
+                            .clickable {
+                                scope.launch { drawerState.open() }
+                                Log.d("cdc", "clicked")
+                            }
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = stringResource(id = R.string.logo),
+                        modifier = Modifier
+                            .height(44.dep)
+                            .width(43.dep)
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.bell),
+                        contentDescription = stringResource(id = R.string.notification),
+                        modifier = Modifier
+                            .height(24.72.dep)
+                            .width(22.81.dep)
+                    )
+                }
+                Card(
+                    modifier = Modifier
+                        //.background(color = Color(0xFFF9F9F9))
+                        .height(1.dep)
+                        .fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(4.dep),
+                    colors = CardDefaults.cardColors(Color(0xFF00000029))
+                ) {
+                }
+                Spacer(
+                    modifier = Modifier
+                        .height(22.dep)
+                )
+                Text(
+                    text = stringResource(id = R.string.todo),
+                    fontSize = 24.sep,
+                    color = Color(0xFF6D6D6D),
+                    modifier = Modifier
+                )
+                Text(
+                    text = stringResource(id = R.string.today_overdue),
+                    fontSize = 10.sep,
+                    color = Color(0xFF6D6D6D),
+                    modifier = Modifier
+                        .padding(start = 20.dep)
+                        .align(Alignment.Start)
+                )
+                Spacer(
+                    modifier = Modifier
+                        .height(6.dep)
+                )
+                LazyColumn(
+                    modifier = Modifier
+                        .height(180.dep)
+                ) {
+                    items(overdue_list) {
+                        Card(
                             modifier = Modifier
-                                .height(44.dep)
-                                .width(24.dep)
+                                .padding(start = 20.dp, end = 20.dp)
+                                //.border(2.dp, Color.Black)
+                                .background(color = Color.White)
+                                .height(85.dp)
+                                .fillMaxWidth(),
+                            elevation = CardDefaults.cardElevation(8.dp),
+                            shape = RoundedCornerShape(4.dp),
+                            colors = CardDefaults.cardColors(Color.White)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier
+                                    .background(color = Color.White)
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 4.dp)
+                                    .height(52.dp)
+                            ) {
+                                Text(
+                                    text = it.Task,
+                                    fontSize = 14.sep,
+                                    color = Color(0xFF707070),
+                                    modifier = Modifier
+                                        .padding(start = 8.dep)
+                                )
+                                Image(
+                                    painter = painterResource(id = R.drawable.tik),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .height(11.dep)
+                                        .width(16.dep)
+                                )
+                            }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                //horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier
+                                    .background(color = Color(0xFFF7F7F7))
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .padding(horizontal = 4.dp)
+                            )
+                            {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    //horizontalArrangement = Arrangement.SpaceBetween
+                                )
+                                {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.date),
+                                        contentDescription = "",
+                                        modifier = Modifier
+                                            .padding(start = 4.dep)
+                                            .height(11.dep)
+                                            .width(16.dep)
+                                    )
+                                    Text(
+                                        text = it.Date,
+                                        fontSize = 10.sep,
+                                        color = Color(0xFFC63434),
+                                        modifier = Modifier
+                                            .padding(start = 1.dep)
+                                    )
+                                }
+                                Spacer(
+                                    modifier = Modifier
+                                        .width(8.dep)
+                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    //horizontalArrangement = Arrangement.SpaceBetween
+                                )
+                                {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.person),
+                                        contentDescription = "",
+                                        modifier = Modifier
+                                            .height(11.dep)
+                                            .width(16.dep)
+                                    )
+                                    Text(
+                                        text = it.Name,
+                                        fontSize = 10.sep,
+                                        color = Color(0xFF707070),
+                                        modifier = Modifier
+                                            .padding(start = 1.dep)
+                                    )
+                                }
+                                Spacer(
+                                    modifier = Modifier
+                                        .width(8.dep)
+                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    //horizontalArrangement = Arrangement.SpaceBetween
+                                )
+                                {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.priority),
+                                        contentDescription = "",
+                                        modifier = Modifier
+                                            .height(11.dep)
+                                            .width(16.dep)
+                                    )
+                                    Text(
+                                        text = it.Priority,
+                                        fontSize = 10.sep,
+                                        color = Color(0xFF707070),
+                                        modifier = Modifier
+                                            .padding(start = 1.dep)
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .height(12.dep)
                         )
                     }
                 }
-            }
-            if (floatingbtnState) {
-                Row(
+                Spacer(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .height(28.dep)
+                )
+                Text(
+                    text = stringResource(id = R.string.completed),
+                    fontSize = 10.sep,
+                    color = Color(0xFF6D6D6D),
+                    modifier = Modifier
+                        .padding(start = 20.dep)
+                        .align(Alignment.Start)
+                )
+                Spacer(
+                    modifier = Modifier
+                        .height(6.dep)
+                )
+                LazyColumn(
+                    modifier = Modifier
+                        .height(180.dep)
                 ) {
-                    FloatingDialogue_ui()
+                    items(compleated_list) {
+                        Card(
+                            modifier = Modifier
+                                .padding(start = 20.dp, end = 20.dp)
+                                //.border(2.dp, Color.Black)
+                                .background(color = Color.White)
+                                .height(40.dp)
+                                .fillMaxWidth(),
+                            elevation = CardDefaults.cardElevation(8.dp),
+                            shape = RoundedCornerShape(4.dp),
+                            colors = CardDefaults.cardColors(Color.White)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                //horizontalArrangement = Arrangement.SpaceBetween,
+                                modifier = Modifier
+                                    .background(color = Color.White)
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .padding(horizontal = 4.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.greentik),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .height(24.dep)
+                                        .width(24.dep)
+                                )
+                                Text(
+                                    text = it.ColpletedTask,
+                                    fontSize = 14.sep,
+                                    color = Color(0xFF707070),
+                                    modifier = Modifier
+                                        .padding(start = 1.dep)
+                                )
+                            }
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .height(8.dep)
+                        )
+                    }
+                }
+                Box(
+                    contentAlignment = Alignment.BottomCenter,
+                    modifier = Modifier
+                        .background(Color(0xFFF9F9F9))
+                        .fillMaxSize()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .height(54.dep)
+                            .background(Color(0xFF434343))
+                            .padding(horizontal = 12.dep)
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.home),
+                                contentDescription = stringResource(id = R.string.home),
+                                modifier = Modifier
+                                    //.padding(start = 12.dep)
+                                    .height(20.89.dep)
+                                    .width(20.89.dep)
+                                    .clickable {
+                                        Log.d("fgfg", "clicked")
+                                    }
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .height(4.dep)
+                            )
+                            Text(
+                                text = stringResource(id = R.string.home),
+                                fontSize = 10.sep,
+                                color = Color(0xFFEFEFEF),
+                                /* modifier = Modifier
+                                 .padding(start = 8.dep)*/
+                            )
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.task),
+                                contentDescription = stringResource(id = R.string.mytask),
+                                modifier = Modifier
+                                    //.padding(start = 8.dep)
+                                    .height(19.dep)
+                                    .width(19.dep)
+                                    .clickable {
+                                        Log.d("fgfg", "clicked")
+                                    }
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .height(4.dep)
+                            )
+                            Text(
+                                text = stringResource(id = R.string.mytask),
+                                fontSize = 10.sep,
+                                color = Color(0xFF6D6D6D),
+                            )
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.inbox),
+                                contentDescription = stringResource(id = R.string.inbox),
+                                modifier = Modifier
+                                    //.padding(start = 4.dep)
+                                    .height(19.21.dep)
+                                    .width(22.41.dep)
+                                    .clickable {
+                                        Log.d("fgfg", "clicked")
+                                    }
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .height(4.dep)
+                            )
+                            Text(
+                                text = stringResource(id = R.string.inbox),
+                                fontSize = 10.sep,
+                                color = Color(0xFF6D6D6D),
+                            )
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.search),
+                                contentDescription = stringResource(id = R.string.search),
+                                modifier = Modifier
+                                    //.padding(start = 10.dep)
+                                    .height(19.21.dep)
+                                    .width(19.13.dep)
+                                    .clickable {
+                                        Log.d("fgfg", "clicked")
+                                    }
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .height(4.dep)
+                            )
+                            Text(
+                                text = stringResource(id = R.string.search),
+                                fontSize = 10.sep,
+                                color = Color(0xFF6D6D6D),
+                            )
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.bell2),
+                                contentDescription = stringResource(id = R.string.notification),
+                                modifier = Modifier
+                                    //.padding(start = 10.dep)
+                                    .height(20.68.dp)
+                                    .width(19.08.dp)
+                                    .clickable {
+                                        Log.d("fgfg", "clicked")
+                                    }
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .height(4.dep)
+                            )
+                            Text(
+                                text = stringResource(id = R.string.notification),
+                                fontSize = 10.sep,
+                                color = Color(0xFF6D6D6D),
+                            )
+                        }
+                    }
+                }
+            }
+            Box(
+                contentAlignment = Alignment.BottomEnd,
+                modifier = Modifier
+                    .padding(end = 12.dep, bottom = 64.dep)
+                    .fillMaxSize()
+            ) {
+                if (!floatingbtnState) {
+                    Row(
+                        modifier = Modifier
+                            .wrapContentSize(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        FloatingActionButton(
+                            onClick = {
+                                notifier.notify(MyDataIds.floatingDialogue)
+                            },
+                            modifier = Modifier
+                                .height(71.dep)
+                                .width(71.dep),
+                            shape = CircleShape,
+                            containerColor = Color.White,
+                            elevation = FloatingActionButtonDefaults.elevation(2.dep)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.add),
+                                contentDescription = stringResource(id = R.string.add_task),
+                                modifier = Modifier
+                                    .height(44.dep)
+                                    .width(24.dep)
+                            )
+                        }
+                    }
+                }
+                if (floatingbtnState) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        FloatingDialogue_ui()
+                    }
                 }
             }
         }
@@ -719,7 +1135,6 @@ fun FloatingDialogue_ui(
         }
     }
 }
-
 
 @Preview(showSystemUi = true)
 @Composable
